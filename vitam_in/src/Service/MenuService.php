@@ -21,7 +21,7 @@ class MenuService
                 ['label' => 'Dashboard',  'route' => 'app_dashboard', 'icon' => 'lucide:home'],
                 // ['label' => 'Mi Perfil',  'route' => 'app_perfil', 'icon' => 'lucide:user'],
                 // ['label' => 'Notes',  'route' => 'app_notes', 'icon' => 'lucide:notepad'],
-                // ['label' => 'Historique',  'route' => 'app_historique', 'icon' => 'lucide:notepad-pencil'],
+                ['label' => 'Historique',  'route' => 'app_user_supplement_history', 'icon' => 'lucide:notebook'],
                 ['label' => 'Cerrar sesión', 'route' => 'app_logout', 'icon' => 'lucide:log-out'],
             ];
         }elseif ($this->security->isGranted('ROLE_ADMIN')) {

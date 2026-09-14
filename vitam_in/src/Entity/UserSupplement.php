@@ -185,4 +185,11 @@ class UserSupplement
         }
         return $this;
     }
+    public function getEndDate(): ?\DateTimeImmutable
+    {
+        if ($this->start_date === null || $this->duration_days === null) {
+            return null;
+        }
+        return $this->start_date->modify(sprintf('+%d days', $this->duration_days));
+    }
 }

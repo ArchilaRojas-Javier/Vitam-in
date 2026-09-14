@@ -8,6 +8,7 @@ use App\Form\UserSupplementType;
 use App\Service\UserSupplementService;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\ReminderRepository;
+use App\Repository\UserSupplementRepository;   
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -201,4 +202,19 @@ public function new(Request $request, UserSupplementService $userSupplementServi
         $this->addFlash('success', 'Supplément supprimé avec succès.');
         return $this->redirectToRoute('app_dashboard', [], Response::HTTP_SEE_OTHER);
     }
+
+    #[Route('/historique', name: 'app_user_supplement_history', methods: ['GET'])]
+    #[IsGranted('ROLE_USER')]
+    public function history(Request $request, UserSupplementRepository $userSupplementRepository,): Response 
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+
+        $dataUserSupplement = $userSupplementRepository->findForHistory($user);   
+        
+        return $this->render('user_supplement/history.html.twig', [
+           'dataUserSupplement' => $dataUserSupplement,
+        ]);
+    }
+
 }

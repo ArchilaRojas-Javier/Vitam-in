@@ -31,4 +31,14 @@ class UserSupplementRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    public function findForHistory(User $user): array
+    {
+        $qb = $this->createQueryBuilder('us')
+            ->andWhere('us.user = :user')
+            ->setParameter('user', $user)
+            ->orderBy('us.start_date', 'DESC');
+
+        return $qb->getQuery()->getResult();
+    }
+
 }
