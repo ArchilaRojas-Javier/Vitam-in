@@ -1,0 +1,94 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Historique{% endblock %}
+
+{% block body %}
+
+	<section class="flex flex-col items-center p-6 min-h-screen w-screen gap-6 mb-12 ">
+   	
+        <twig:UserCard/>
+        
+        <h2 class="text-[#6E6F6F] text-[2rem]">Historique</h2>
+
+        
+            <div class="border rounded-xl border-[#C6C6C8] shadow-md overflow-hidden">
+                <div class="max-h-60 overflow-y-auto md:max-h-none md:overflow-visible">
+                    <table class="table w-full table-fixed">
+                        <colgroup>
+                            <col class="w-4/12">
+                            <col class="w-2/12">
+                            <col class="w-2/12">
+                            <col class="w-2/12">
+                           
+                        </colgroup>
+
+                        <thead class="sticky top-0 bg-white z-10 border-b border-[#C6C6C8]">
+                            <tr>
+                                <th scope="col" class="px-2 py-3">
+                                    <span class="sr-only">Supplément</span>
+                                    <div class="flex justify-center items-center">
+                                        {{ ux_icon('lucide:pill', { 'aria-hidden': 'true', class: 'w-5 h-5' }) }}
+                                    </div>
+                                </th>
+                                <th scope="col" class="px-2 py-3">
+                                    <span class="sr-only">Dosage</span>
+                                    <div class="flex justify-center items-center">
+                                        {{ ux_icon('lucide:scale', { 'aria-hidden': 'true', class: 'w-5 h-5' }) }}
+                                    </div>
+                                </th>
+                                <th scope="col" class="px-2 py-3">
+                                    <span class="sr-only">Dates</span>
+                                    <div class="flex justify-center items-center">
+                                        {{ ux_icon('lucide:calendar-1', { 'aria-hidden': 'true', class: 'w-5 h-5' }) }}
+                                    </div>
+                                </th>
+                                <th scope="col" class="px-2 py-3">
+                                    <span class="sr-only">Notes</span>
+                                    <div class="flex justify-center items-center">
+                                        {{ ux_icon('lucide:notebook-pen', { 'aria-hidden': 'true', class: 'w-5 h-5' }) }}
+                                    </div>
+                                </th>
+                              
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {% for userSupplement in dataUserSupplement %}
+                                <tr>
+                                    <td class="text-center px-1 py-1">
+                                        <a href="{{ path('app_supplement_show', { id: userSupplement.supplement.id }) }}" class="block hover:underline text-inherit">
+                                            {{ userSupplement.supplement.name }}
+                                        </a>
+                                    </td>
+                                    <td class="text-center px-2 py-2">{{ userSupplement.dosageSchedule.dose }}</td>
+                                    <td class="flex flex-col text-center px-2 py-2">{{ userSupplement.startDate|date('d/m/y') }}
+                                        <span>{{ userSupplement.endDate|date('d/m/y') }}</span></td>
+                                    <td class="text-center px-2 py-2">
+                                        <a href="{{ path('app_notes_by_supplement', { id: userSupplement.id }) }}">
+                                            {{ userSupplement.notes|length }}
+                                        </a>
+                                    </td>							
+                                   
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td colspan="6" class="text-center px-2 py-4">
+                                        Ajoutez votre premier supplément pour suivre vos progrès.
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="mt-4 flex justify-center">
+                {% if dataUserSupplement is empty %}
+                    <button type="button" class="btn bg-[#308AFF] text-white border rounded-[0.5rem] p-2">
+                        <a href="{{ path('app_home') }}">Commencer</a>
+                    </button>
+                {% endif %}
+            </div>
+        
+        
+    </section>
+{% endblock %}
