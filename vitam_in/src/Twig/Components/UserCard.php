@@ -2,38 +2,38 @@
 
 namespace App\Twig\Components;
 
-use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
+use App\Entity\User;
 use Symfony\Bundle\SecurityBundle\Security;
-
-
-
+use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[AsTwigComponent]
 final class UserCard
 {
     public function __construct(
         private Security $security,
-        
     ) {
     }
-    
+
     /**
-     * Nombre del usuario actual o null.
+     * Devuelve la entidad User actual o null (solo si es tu App\Entity\User).
      */
+    private function getCurrentUser(): ?User
+    {
+        $user = $this->security->getUser();
+
+        // Importante: verificar que sea tu entidad, no solo UserInterface
+        return $user instanceof User ? $user : null;
+    }
+
     public function getUserName(): ?string
     {
         $user = $this->security->getUser();
-        return $user ? $user->getUserIdentifier() : null;
+        return $user?->getUserIdentifier();
     }
-    public function getAvatarUrl(): ?string
+
+    public function getAvatarUrlFromGoogle(): ?string
     {
-        $user = $this->security->getUser();
-        if(!$user){
-            return null;
-        }
-        
-        $avatarUrl = $user->getAvatarUrl();
-        
-        return $avatarUrl;
+        return $this->getCurrentUser()?->getAvatarUrl();
     }
 }

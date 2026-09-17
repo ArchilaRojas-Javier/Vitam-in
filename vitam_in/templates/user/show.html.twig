@@ -1,54 +1,73 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}User{% endblock %}
+{% block title %}Perfil de Usuario{% endblock %}
 
 {% block body %}
-    <h1>User</h1>
+<section class="flex flex-col items-center p-6 min-h-screen w-full gap-6 mb-12">
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ user.id }}</td>
-            </tr>
-            <tr>
-                <th>Email</th>
-                <td>{{ user.email }}</td>
-            </tr>
-            <tr>
-                <th>Roles</th>
-                <td>{{ user.roles ? user.roles|json_encode : '' }}</td>
-            </tr>
-            <tr>
-                <th>Password</th>
-                <td>{{ user.password }}</td>
-            </tr>
-            <tr>
-                <th>IsVerified</th>
-                <td>{{ user.isVerified ? 'Yes' : 'No' }}</td>
-            </tr>
-            <tr>
-                <th>GoogleId</th>
-                <td>{{ user.googleId }}</td>
-            </tr>
-            <tr>
-                <th>AvatarUrl</th>
-                <td>{{ user.AvatarUrl }}</td>
-            </tr>
-            <tr>
-                <th>GoogleAccessToken</th>
-                <td>{{ user.googleAccessToken ? user.googleAccessToken|json_encode : '' }}</td>
-            </tr>
-            <tr>
-                <th>GoogleRefreshToken</th>
-                <td>{{ user.googleRefreshToken }}</td>
-            </tr>
-        </tbody>
-    </table>
+    <h1 class="text-3xl font-bold">Perfil de Usuario</h1>
 
-    <a href="{{ path('app_user_index') }}">back to list</a>
+    <div class="container mx-auto max-w-4xl p-6 mb-12 bg-white rounded-lg shadow">
 
-    <a href="{{ path('app_user_edit', {'id': user.id}) }}">edit</a>
+        <div class="flex flex-col md:flex-row gap-8 items-start">
 
-    {{ include('user/_delete_form.html.twig') }}
+            {# Columna izquierda: información #}
+            <div class="flex-1 w-full">
+                <table class="table w-full">
+                    <tbody>
+                        <tr>
+                            <th class="text-left py-2 w-40">Id</th>
+                            <td class="py-2">{{ user.id }}</td>
+                        </tr>
+                        <tr>
+                            <th class="text-left py-2">Email</th>
+                            <td class="py-2">{{ user.email }}</td>
+                        </tr>
+                        <tr>
+                            <th class="text-left py-2">Roles</th>
+                            <td class="py-2">{{ user.roles ? user.roles|json_encode : '' }}</td>
+                        </tr>
+                        <tr>
+                            <th class="text-left py-2">Verificado</th>
+                            <td class="py-2">
+                                <span class="{{ user.isVerified ? 'text-green-600' : 'text-red-600' }}">
+                                    {{ user.isVerified ? 'Sí' : 'No' }}
+                                </span>
+                            </td>
+                        </tr>
+                       
+                    </tbody>
+                </table>
+            </div>
+
+            {# Columna derecha: avatar o iniciales #}
+            <div class="flex flex-col items-center justify-center">
+               {% if user.avatarUrl %}
+				<img src="{{ user.avatarUrl }}" alt="Avatar" class="w-10 h-10 rounded-full object-cover">
+			{% else %}
+				{# <div class="w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center font-semibold text-base">
+					{{ user.name|first|upper }}
+				</div> #}
+			{% endif %} 
+            </div>
+
+        </div>
+
+        {# Acciones #}
+        <div class="flex flex-wrap gap-3 mt-8 pt-6 border-t border-gray-200">
+            <a href="{{ path('app_user_edit', {'id': user.id}) }}"
+               class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
+                Editar
+            </a>
+
+            {# <a href="{{ path('app_user_index') }}" class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 transition">
+                Volver a la lista
+            </a> #}
+
+            {{ include('user/_delete_form.html.twig') }}
+        </div>
+
+    </div>
+
+</section>
 {% endblock %}
