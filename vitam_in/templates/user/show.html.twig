@@ -28,6 +28,10 @@
                             <td class="py-2">{{ user.roles ? user.roles|json_encode : '' }}</td>
                         </tr>
                         <tr>
+                            <th class="text-left py-2">Sexo</th>
+                            <td class="py-2">{{ user.sex ? user.sex.value : '' }}</td>
+                        </tr>
+                        <tr>
                             <th class="text-left py-2">Verificado</th>
                             <td class="py-2">
                                 <span class="{{ user.isVerified ? 'text-green-600' : 'text-red-600' }}">
@@ -45,9 +49,9 @@
                {% if user.avatarUrl %}
 				<img src="{{ user.avatarUrl }}" alt="Avatar" class="w-10 h-10 rounded-full object-cover">
 			{% else %}
-				{# <div class="w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center font-semibold text-base">
-					{{ user.name|first|upper }}
-				</div> #}
+				<div class="w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center font-semibold text-base">
+					{{ user.firstName|first|upper }}
+				</div>
 			{% endif %} 
             </div>
 

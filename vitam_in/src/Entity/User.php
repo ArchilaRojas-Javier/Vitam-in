@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Enum\Sex;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -79,6 +80,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $googleRefreshToken = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $firstName = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $lastName = null;
+
+    #[ORM\Column(enumType: Sex::class)]
+    private ?Sex $sex = null;
 
     public function __construct()
     {
@@ -369,6 +379,42 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setGoogleRefreshToken(?string $googleRefreshToken): static
     {
         $this->googleRefreshToken = $googleRefreshToken;
+
+        return $this;
+    }
+
+    public function getFirstName(): ?string
+    {
+        return $this->firstName;
+    }
+
+    public function setFirstName(?string $firstName): static
+    {
+        $this->firstName = $firstName;
+
+        return $this;
+    }
+
+    public function getLastName(): ?string
+    {
+        return $this->lastName;
+    }
+
+    public function setLastName(?string $lastName): static
+    {
+        $this->lastName = $lastName;
+
+        return $this;
+    }
+
+    public function getSex(): ?Sex
+    {
+        return $this->sex;
+    }
+
+    public function setSex(Sex $sex): static
+    {
+        $this->sex = $sex;
 
         return $this;
     }
