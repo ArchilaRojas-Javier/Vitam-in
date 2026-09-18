@@ -17,6 +17,7 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
 use Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface;
 use KnpU\OAuth2ClientBundle\Client\Provider\GoogleClient;
+use App\Enum\Sex;
 
 class GoogleAuthenticator extends OAuth2Authenticator implements AuthenticationEntryPointInterface
 {
@@ -119,6 +120,17 @@ class GoogleAuthenticator extends OAuth2Authenticator implements AuthenticationE
             $user->setRoles(['ROLE_USER']);
             $user->setIsVerified(true);
             $user->setPassword(password_hash(bin2hex(random_bytes(20)), PASSWORD_DEFAULT));
+            // La librería expone los datos del perfil a través de toArray()
+            $userData = $googleUser->toArray();
+
+            $firstName = $userData['given_name'] ?? null;
+            $lastName = $userData['family_name'] ?? null;
+            $avatarUrl = $userData['picture'] ?? null;
+
+            $user->setFirstName($firstName);
+            $user->setLastName($lastName);
+            $user->setAvatarUrl($avatarUrl);
+            $user->setSex(Sex::Other);            
             
         }
         // Get the access token and refresh token
