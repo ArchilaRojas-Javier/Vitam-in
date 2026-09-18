@@ -1,24 +1,24 @@
-{% if this.userName %}
+{% if this.fullName %}
 	<div
 		class="container flex items-center justify-between bg-[#fffff] m-6 p-2"
 	>
 		{# Côté gauche : nom  #}
 		<div class="text-base text-[#6E6F6F]">
 			<p class="text-2xl">Bonjour,</p>
-			<span>{{ this.userName }}</span>
+			<span>{{ this.fullName }}</span>
 		</div>
 
 		{# Côté droit : avatar #}
 		<div>
-			{% if this.avatarUrlFromGoogle %}
+			{% if this.avatarUrl %}
 				<img
-					src="{{ this.avatarUrlFromGoogle }}"
-					alt="{{ this.userName }}"
+					src="{{ this.avatarUrl }}"
+					alt="{{ this.fullName }}"
 					class="w-10 h-10 rounded-full object-cover"
 				>
 			{% else %}
 				<div class="w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center font-semibold text-base">
-					{{ this.userName|first|upper }}
+					{{ this.fullName|first|upper }}
 				</div>
 			{% endif %}
 
