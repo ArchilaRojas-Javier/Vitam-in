@@ -9,23 +9,27 @@
 		</div>
 
 		{# Côté droit : avatar #}
-		<div>
-			{% if this.avatarUrl %}
-				<img
-					src="{{ this.avatarUrl }}"
-					alt="{{ this.fullName }}"
-					class="w-10 h-10 rounded-full object-cover"
-				>
-			{% else %}
-				<div class="w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center font-semibold text-base">
-					{{ this.fullName|first|upper }}
-				</div>
-			{% endif %}
+		{# ─── Avatar / Iniciales ─── #}
+            <div class="flex justify-center md:order-last md:flex-shrink-0">
+                <div class="relative w-24 h-24 md:w-32 md:h-32">
 
-   
+                    {# Fondo azul con iniciales: siempre visible debajo #}
+                    <div class="absolute inset-0 w-full h-full rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-4xl shadow">
+                        {{ this.initials }}
+                    </div>
 
+                    {# Si hay avatar, se superpone encima #}
+                    {% if this.avatarUrl %}
+                        <img
+                            src="{{ this.avatarUrl }}"
+                            alt="{{ this.fullName }}"
+                            class="absolute inset-0 w-full h-full rounded-full object-cover border-4 border-gray-100 shadow"
+                            onerror="this.style.display='none'"
+                        >
+                    {% endif %}
 
-		</div>
+                </div>
+            </div>
 	</div>
 
 {% endif %} 
