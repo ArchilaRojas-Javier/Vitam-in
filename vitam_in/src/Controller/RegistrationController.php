@@ -16,6 +16,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 use App\Repository\UserRepository;
+use app\Enum\Sex;
 
 class RegistrationController extends AbstractController
 {
@@ -38,6 +39,7 @@ class RegistrationController extends AbstractController
             $user->setPassword($userPasswordHasher->hashPassword($user, $plainPassword));
 
             $user->setRoles(['ROLE_USER']);
+            $user->setSex(Sex::Other);
 
             $entityManager->persist($user);
             $entityManager->flush();
