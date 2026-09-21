@@ -17,17 +17,23 @@ class MenuService
     {
         if ($this->security->getUser()) {
             // Utilisateur connecté : seuls ces liens sont affichés.
+            if ($this->security->isGranted('ROLE_ADMIN')) {
+                // Utilisateur connecté avec roll admin
+                return [
+                    // ['label' => 'Dashboard',  'route' => 'app_dashboard', 'icon' => 'lucide:home'],
+                    ['label' => 'Mon Profile',  'route' => 'app_user_profile', 'icon' => 'lucide:user'],
+                    // ['label' => 'Historique',  'route' => 'app_user_supplement_history', 'icon' => 'lucide:notebook'],
+                    ['label' => 'Admin',  'route' => 'app_dashboard_admin', 'icon' => 'lucide:shield'],
+                    ['label' => 'Cerrar sesión', 'route' => 'app_logout', 'icon' => 'lucide:log-out'],
+                ];
+            }
+                // Utilisateur connecté avec roll user
             return [
                 ['label' => 'Dashboard',  'route' => 'app_dashboard', 'icon' => 'lucide:home'],
                 ['label' => 'Mon Profile',  'route' => 'app_user_profile', 'icon' => 'lucide:user'],
                 // ['label' => 'Notes',  'route' => 'app_notes', 'icon' => 'lucide:notepad'],
                 ['label' => 'Historique',  'route' => 'app_user_supplement_history', 'icon' => 'lucide:notebook'],
                 ['label' => 'Cerrar sesión', 'route' => 'app_logout', 'icon' => 'lucide:log-out'],
-            ];
-        }elseif ($this->security->isGranted('ROLE_ADMIN')) {
-            //Utilisateur connecté avec roll admin
-            return [
-                ['label' => 'Admin', 'route' => 'admin', 'icon' => 'lucide:shield'],
             ];
         }else{
             // Utilisateur NON CONNECTÉ : liens publics

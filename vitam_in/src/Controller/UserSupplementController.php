@@ -204,7 +204,6 @@ public function new(Request $request, UserSupplementService $userSupplementServi
     }
 
     #[Route('/historique', name: 'app_user_supplement_history', methods: ['GET'])]
-    #[IsGranted('ROLE_USER')]
     public function history(Request $request, UserSupplementRepository $userSupplementRepository,): Response 
     {
         /** @var User $user */
