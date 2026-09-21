@@ -21,9 +21,9 @@ class MenuService
                 // Utilisateur connecté avec roll admin
                 return [
                     // ['label' => 'Dashboard',  'route' => 'app_dashboard', 'icon' => 'lucide:home'],
-                    ['label' => 'Mon Profile',  'route' => 'app_user_profile', 'icon' => 'lucide:user'],
                     // ['label' => 'Historique',  'route' => 'app_user_supplement_history', 'icon' => 'lucide:notebook'],
-                    ['label' => 'Admin',  'route' => 'app_dashboard_admin', 'icon' => 'lucide:shield'],
+                    ['label' => 'Dashboard Admin',  'route' => 'app_dashboard_admin', 'icon' => 'lucide:shield'],
+                    ['label' => 'Mon Profile',  'route' => 'app_user_profile', 'icon' => 'lucide:user'],
                     ['label' => 'Cerrar sesión', 'route' => 'app_logout', 'icon' => 'lucide:log-out'],
                 ];
             }
