@@ -37,7 +37,7 @@ class SupplementController extends AbstractController
     }
 
     #[Route('/supplement/{id}/edit', name: 'app_supplement_edit', requirements: ['id' => '\d+'])]
-    public function edit(int $id, SupplementRepository $supplementRepository): Response
+    public function edit(int $id, SupplementRepository $supplementRepository, Request $request, EntityManagerInterface $em): Response
     {
         $supplement = $supplementRepository->find($id);
 
@@ -45,8 +45,37 @@ class SupplementController extends AbstractController
             throw $this->createNotFoundException('Supplément introuvable.');
         }
 
+        $defaultProfile = [
+            'dose'    => null,
+            'unit'    => 'mg',
+            'moments' => ['morning' => 0, 'noon' => 0, 'evening' => 0],
+        ];
+
+        $form = $this->createForm(SupplementType::class, $supplement);
+
+        // Rellenar los 3 sub-formularios NO mapeados antes de handleRequest
+        foreach (['male', 'female', 'general'] as $key) {
+            $form->get($key)->setData($defaultProfile);
+        }
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            
+        $supplement->setDosageSchedule([
+                'male'    => $form->get('male')->getData(),
+                'female'  => $form->get('female')->getData(),
+                'general' => $form->get('general')->getData(),
+            ]);
+        $em->persist($supplement);
+        $em->flush();
+
+        $this->addFlash('success', 'Le complément a été ajouté.');
+        return $this->redirectToRoute('app_supplement_index', [], Response::HTTP_SEE_OTHER);
+    }
         return $this->render('supplement/edit.html.twig', [
             'supplement' => $supplement,
+            'form' => $form,
         ]);
     }
 
@@ -59,9 +88,7 @@ class SupplementController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->render('supplement/show.html.twig', [
-            'supplement' => $supplement,
-        ]);
+        return $this->redirect('supplement/list.html.twig', Response::HTTP_SEE_OTHER);
     }
 
     #[Route('/supplement/new', name: 'app_supplement_new')]
