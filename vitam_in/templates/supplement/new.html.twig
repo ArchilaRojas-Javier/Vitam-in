@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New {% endblock %}
+
+{% block body %}
+    <section class="flex flex-col items-center p-6 min-h-screen w-screen gap-6 mb-12 ">
+		
+		
+			<h1 class="text-[#308AFF] text-[2rem]">Nouveau supplément</h1>
+			
+             
+            {{ include('supplement/_form.html.twig') }}
+
+	</section>
+{% endblock %}

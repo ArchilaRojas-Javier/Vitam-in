@@ -8,6 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
+use App\Form\SupplementType;
 
 class SupplementController extends AbstractController
 {
@@ -64,8 +65,42 @@ class SupplementController extends AbstractController
     }
 
     #[Route('/supplement/new', name: 'app_supplement_new')]
-    public function new(): Response
+    public function new(Request $request, EntityManagerInterface $em): Response
     {
-        return $this->render('supplement/new.html.twig');
+        $supplement = new Supplement();
+        $defaultProfile = [
+            'dose'    => null,
+            'unit'    => 'mg',
+            'moments' => ['morning' => 0, 'noon' => 0, 'evening' => 0],
+        ];
+
+        $form = $this->createForm(SupplementType::class, $supplement);
+
+        // Rellenar los 3 sub-formularios NO mapeados antes de handleRequest
+        foreach (['male', 'female', 'general'] as $key) {
+            $form->get($key)->setData($defaultProfile);
+        }
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+        
+            $supplement->setDosageSchedule([
+                'male'    => $form->get('male')->getData(),
+                'female'  => $form->get('female')->getData(),
+                'general' => $form->get('general')->getData(),
+            ]);
+            $em->persist($supplement);
+            $em->flush();
+
+            $this->addFlash('success', 'Le complément a été ajouté avec succès.');
+
+            return $this->redirectToRoute('app_supplement_list', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->render('supplement/new.html.twig', [
+            'supplement' => $supplement,
+            'form' => $form,
+        ]);
     }
-}   
+}

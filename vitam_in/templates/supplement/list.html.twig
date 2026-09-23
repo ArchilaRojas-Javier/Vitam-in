@@ -1,17 +1,19 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Catalogue des compléments{% endblock %}
+{% block title %}Catalogue des suppléments{% endblock %}
 
 {% block body %}
 
 	<section class="flex flex-col items-center p-6 min-h-screen w-screen gap-6 mb-12 ">
 
-    <h1 class="text-[#6E6F6F] text-2xl sm:text-[2rem] text-center">
-        Catalogue des compléments
+    <h1 class="text-[#6E6F6F] text-2xl sm:text-[2rem] text-center mb-6">
+        Catalogue des suppléments
     </h1>
 
+    <p>Totale des suppléments : {{ supplements|length }}</p>
+
     {# Contenedor con scroll vertical en mobile #}
-	<div class="w-full max-w-4xl flex-1 min-h-0 overflow-y-auto max-h-[40vh] md:max-h-none">
+	<div class="w-full max-w-4xl flex-1 min-h-0 overflow-y-auto max-h-[40vh] md:max-h-[60vh] lg:max-h-[70vh]">
 
         <table class="w-full bg-white text-left ">
             <thead class="bg-gray-100 text-[#6E6F6F] uppercase text-sm">
@@ -64,10 +66,12 @@
     </div>
 
     {# Bouton Ajouter en bas #}
-     <a href="{{ path('app_supplement_new') }}"
-       class=" py-2 px-5 rounded-md hover:bg-[#1e7e34] transition-colors duration-300">
-        + Ajouter un complément
-    </a>
+    <button class="btn bg-[#308AFF] text-white border rounded-[0.5rem] p-2">
+        <a href="{{ path('app_supplement_new') }}"
+        class=" py-2 px-5 rounded-md hover:bg-[#1e7e34] transition-colors duration-300">
+            + Ajouter un complément
+        </a>
+    </button>
 
 </section>
 {% endblock %}
