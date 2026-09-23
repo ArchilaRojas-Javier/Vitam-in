@@ -25,13 +25,11 @@ final class DashboardController extends AbstractController
 
     #[IsGranted('ROLE_ADMIN')]
     #[Route('/dashboard/admin', name: 'app_dashboard_admin')]
-    public function admin(SupplementRepository $supplementRepository): Response
+    public function admin(): Response
     {   
        
-        $supplements = $supplementRepository->findAll();
-
         return $this->render('dashboard/admin.html.twig', [
-            'supplements' => $supplements,
+            
         ]);
     }  
 }

@@ -1,0 +1,73 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Catalogue des compléments{% endblock %}
+
+{% block body %}
+
+	<section class="flex flex-col items-center p-6 min-h-screen w-screen gap-6 mb-12 ">
+
+    <h1 class="text-[#6E6F6F] text-2xl sm:text-[2rem] text-center">
+        Catalogue des compléments
+    </h1>
+
+    {# Contenedor con scroll vertical en mobile #}
+	<div class="w-full max-w-4xl flex-1 min-h-0 overflow-y-auto max-h-[40vh] md:max-h-none">
+
+        <table class="w-full bg-white text-left ">
+            <thead class="bg-gray-100 text-[#6E6F6F] uppercase text-sm">
+                <tr>
+                    <th class="px-4 py-3 whitespace-nowrap">Nom</th>
+                    <th class="px-4 py-3 whitespace-nowrap text-right">Action</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200">
+                {% for supplement in supplements %}
+                    <tr class="hover:bg-gray-50 transition-colors">
+                        <td class="px-4 py-3 text-[#6E6F6F] font-medium whitespace-nowrap">
+                            {{ supplement.name }}
+                        </td>
+                        <td class="px-4 py-3 text-right whitespace-nowrap">
+                            <div class="relative md:ml-auto">
+                                <details class="relative inline-block">
+                                    <summary class="list-none cursor-pointer p-1 hover:bg-gray-100 rounded focus:outline-none">
+                                        {{ ux_icon('lucide:more-horizontal', { 'aria-hidden': 'true', class: 'w-5 h-5' }) }}
+                                    </summary>
+                                    <div class="absolute right-0 mt-1 w-36 bg-white border border-gray-200 rounded-md shadow-lg z-10">
+                                        <a href="{{ path('app_supplement_show', {'id': supplement.id}) }}"
+                                                class="block w-full text-center px-4 py-2 text-sm hover:bg-gray-100">
+                                                Voir le détail
+                                            </a>
+                                        <a href="{{ path('app_supplement_edit', { id: supplement.id }) }}" class="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100">
+                                                                                                                        ✏️ Modifier
+                                                                                                                    </a>
+                                        <form method="post" action="{{ path('app_supplement_delete', { id: supplement.id }) }}" style="display: inline-block; width: 100%;">
+                                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ supplement.id) }}">
+                                            <button type="submit" class="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 text-red-600">
+                                                🗑️ Supprimer
+                                            </button>
+                                        </form>
+                                    </div>
+                                </details>
+                            </div>
+                            
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="2" class="px-4 py-6 text-center text-gray-500">
+                            Aucun complément trouvé.
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {# Bouton Ajouter en bas #}
+     <a href="{{ path('app_supplement_new') }}"
+       class=" py-2 px-5 rounded-md hover:bg-[#1e7e34] transition-colors duration-300">
+        + Ajouter un complément
+    </a>
+
+</section>
+{% endblock %}

@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Liste des compléments{% endblock %}
+{% block title %}Dashboard Admin{% endblock %}
 
 {% block body %}
 
@@ -8,7 +8,11 @@
 
         <twig:UserCard/>
    	
-        <h1 class="text-[#6E6F6F] text-[2rem]">Liste des compléments</h1>
+        <h1 class="text-[#6E6F6F] text-[2rem]">Dashboard Admin</h1>
+
+        <a href="{{ path('app_supplement_list') }}" class=" rounded-md hover:bg-[#0056b3] transition-colors duration-300">Gestion du catalogue</a>
+        <a href="{{ path('app_comment_list') }}" class=" rounded-md hover:bg-[#0056b3] transition-colors duration-300">Moderation de commentaires</a>
+
         
     </section>
 {% endblock %}

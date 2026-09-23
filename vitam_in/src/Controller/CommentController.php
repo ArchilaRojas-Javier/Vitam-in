@@ -67,24 +67,6 @@ final class CommentController extends AbstractController
         ]);
     }
 
-    // #[Route('/{id}/edit', name: 'app_comment_edit', methods: ['GET', 'POST'])]
-    // public function edit(Request $request, Comment $comment, EntityManagerInterface $entityManager): Response
-    // {
-    //     $form = $this->createForm(CommentType::class, $comment);
-    //     $form->handleRequest($request);
-
-    //     if ($form->isSubmitted() && $form->isValid()) {
-    //         $entityManager->flush();
-
-    //         return $this->redirectToRoute('app_comment_index', [], Response::HTTP_SEE_OTHER);
-    //     }
-
-    //     return $this->render('comment/edit.html.twig', [
-    //         'comment' => $comment,
-    //         'form' => $form,
-    //     ]);
-    // }
-
     #[Route('/{id}', name: 'app_comment_delete', methods: ['POST'])]
     public function delete(Request $request, Comment $comment, EntityManagerInterface $entityManager): Response
     {
@@ -101,6 +83,16 @@ final class CommentController extends AbstractController
 
         return $this->render('supplement/show.html.twig', [
             'supplement' => $supplement,
+        ]);
+    }
+
+    #[Route('/list', name: 'app_comment_list')]
+    public function list(CommentRepository $commentRepository): Response
+    {
+        $comments = $commentRepository->findAll();
+
+        return $this->render('comment/index.html.twig', [
+            'comments' => $comments,
         ]);
     }
 }
