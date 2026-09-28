@@ -6,7 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
-use App\Repository\SupplementRepository;    
+ 
 
 #[IsGranted('ROLE_USER')]
 final class DashboardController extends AbstractController
@@ -23,8 +23,8 @@ final class DashboardController extends AbstractController
         ]);
     }
 
-    #[IsGranted('ROLE_ADMIN')]
     #[Route('/dashboard/admin', name: 'app_dashboard_admin')]
+    #[IsGranted('ROLE_ADMIN')]
     public function admin(): Response
     {   
        

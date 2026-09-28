@@ -9,6 +9,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 use App\Form\SupplementType;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
+
 
 class SupplementController extends AbstractController
 {
@@ -27,6 +29,7 @@ class SupplementController extends AbstractController
     }
 
     #[Route('/supplement', name: 'app_supplement_list')]
+    #[IsGranted('ROLE_ADMIN')]
     public function list(SupplementRepository $supplementRepository): Response
     {
         $supplements = $supplementRepository->findAll();
@@ -37,6 +40,7 @@ class SupplementController extends AbstractController
     }
 
     #[Route('/supplement/{id}/edit', name: 'app_supplement_edit', requirements: ['id' => '\d+'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function edit(int $id, SupplementRepository $supplementRepository, Request $request, EntityManagerInterface $em): Response
     {
         $supplement = $supplementRepository->find($id);
@@ -79,7 +83,8 @@ class SupplementController extends AbstractController
         ]);
     }
 
-     #[Route('/supplement/{id}/delete', name: 'app_supplement_delete', methods: ['POST'])]
+    #[Route('/supplement/{id}/delete', name: 'app_supplement_delete', methods: ['POST'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function delete(Request $request, Supplement $supplement, EntityManagerInterface $entityManager): Response
     {
        
@@ -92,6 +97,7 @@ class SupplementController extends AbstractController
     }
 
     #[Route('/supplement/new', name: 'app_supplement_new')]
+    #[IsGranted('ROLE_ADMIN')]
     public function new(Request $request, EntityManagerInterface $em): Response
     {
         $supplement = new Supplement();
