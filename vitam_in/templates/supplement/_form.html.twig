@@ -1,0 +1,118 @@
+
+    <div class="container-form w-full max-w-xl p-6 border rounded-[0.5rem] border-[rgb(217,217,217)] shadow-md">
+
+        <h2 class="font-semibold text-center text-lg mb-6">
+            {{ supplement.id ? supplement.name : 'Ajouter un supplément' }}
+        </h2>
+
+        {{ form_start(form) }}
+            {{ form_errors(form) }}
+
+            {# Nom #}
+            <div class="flex flex-col mb-6">
+                {{ form_label(form.name) }}
+                {{ form_widget(form.name, {'attr': {'class': 'border rounded-[0.5rem] p-2'}}) }}
+                {{ form_errors(form.name) }}
+            </div>
+
+            {% for key in ['male', 'female', 'general'] %}
+            {% set profile = form[key] %}
+            <fieldset class="border border-[rgb(217,217,217)] rounded-[0.5rem] p-4 mb-6">
+                <legend class="text-[#6E6F6F] font-semibold px-2 text-sm">
+                    {{ profile.vars.label }}
+                </legend>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                    <div class="flex flex-col">
+                        {{ form_label(profile.dose) }}
+                        {{ form_widget(profile.dose, {'attr': {'class': 'border rounded-[0.5rem] p-2'}}) }}
+                        {{ form_errors(profile.dose) }}
+                    </div>
+                    <div class="flex flex-col">
+                        {{ form_label(profile.unit) }}
+                        {{ form_widget(profile.unit, {'attr': {'class': 'border rounded-[0.5rem] p-2'}}) }}
+                        {{ form_errors(profile.unit) }}
+                    </div>
+                </div>
+
+                <p class="text-xs text-gray-500 mb-2">Prises par moment de la journée</p>
+                <div class="grid grid-cols-3 gap-2">
+                    <div class="flex flex-col">
+                        {{ form_label(profile.morning) }}
+                        {{ form_widget(profile.morning, {'attr': {'class': 'border rounded-[0.5rem] p-2 w-full'}}) }}
+                    </div>
+                    <div class="flex flex-col">
+                        {{ form_label(profile.noon) }}
+                        {{ form_widget(profile.noon, {'attr': {'class': 'border rounded-[0.5rem] p-2 w-full'}}) }}
+                    </div>
+                    <div class="flex flex-col">
+                        {{ form_label(profile.evening) }}
+                        {{ form_widget(profile.evening, {'attr': {'class': 'border rounded-[0.5rem] p-2 w-full'}}) }}
+                    </div>
+                </div>
+            </fieldset>
+        {% endfor %}
+
+            {# Durée ON #}
+            <div class="flex flex-col mb-6">
+                {{ form_label(form.on_duration_days) }}
+                {{ form_widget(form.on_duration_days, {'attr': {'class': 'border rounded-[0.5rem] p-2'}}) }}
+                {{ form_errors(form.on_duration_days) }}
+            </div>
+
+            {# Durée OFF #}
+            <div class="flex flex-col mb-6">
+                {{ form_label(form.off_duration_days) }}
+                {{ form_widget(form.off_duration_days, {'attr': {'class': 'border rounded-[0.5rem] p-2'}}) }}
+                {{ form_errors(form.off_duration_days) }}
+            </div>
+
+            {# Description #}
+            <div class="flex flex-col mb-6">
+                {{ form_label(form.description) }}
+                {{ form_widget(form.description, {'attr': {'class': 'border rounded-[0.5rem] p-2', 'rows': 4}}) }}
+                {{ form_errors(form.description) }}
+            </div>
+
+            {# Précautions #}
+            <div class="flex flex-col mb-6">
+                {{ form_label(form.precautions) }}
+                {{ form_widget(form.precautions, {'attr': {'class': 'border rounded-[0.5rem] p-2', 'rows': 3}}) }}
+                {{ form_errors(form.precautions) }}
+            </div>
+
+            {# Type #}
+            <div class="flex flex-col mb-6">
+                {{ form_label(form.supplementtype) }}
+                {{ form_widget(form.supplementtype, {'attr': {'class': 'border rounded-[0.5rem] p-2'}}) }}
+                {{ form_errors(form.supplementtype) }}
+            </div>
+
+            {# Bénéfices (checkboxes) #}
+            <div class="flex flex-col mb-6">
+                {{ form_label(form.supplementbenefit) }}
+                <div class="flex flex-wrap gap-3 mt-1">
+                    {% for child in form.supplementbenefit %}
+                        <label class="flex items-center gap-2 text-sm text-[#6E6F6F]">
+                            {{ form_widget(child) }}
+                            {{ child.vars.label }}
+                        </label>
+                    {% endfor %}
+                </div>
+                {{ form_errors(form.supplementbenefit) }}
+            </div>
+
+            {# Boutons #}
+            <div class="flex flex-col sm:flex-row gap-3 mb-2">
+                <button type="submit"
+                        class="bg-[#308AFF] text-white border rounded-[0.5rem] w-full p-2 hover:bg-[#1e6fd9] transition-colors">
+                    Ajouter
+                </button>
+                <a href="{{ path('app_dashboard_admin') }}"
+                   class="bg-[#6E6F6F] text-white border rounded-[0.5rem] w-full p-2 text-center hover:bg-[#585959] transition-colors">
+                    Annuler
+                </a>
+            </div>
+
+        {{ form_end(form) }}
+    </div>
