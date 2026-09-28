@@ -1,39 +1,129 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Comment index{% endblock %}
+{% block title %}Modération des commentaires{% endblock %}
 
 {% block body %}
-    <h1>Comment index</h1>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Content</th>
-                <th>Is_approuved</th>
-                <th>Created_at</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for comment in comments %}
-            <tr>
-                <td>{{ comment.id }}</td>
-                <td>{{ comment.content }}</td>
-                <td>{{ comment.isApprouved ? 'Yes' : 'No' }}</td>
-                <td>{{ comment.createdAt ? comment.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>
-                    <a href="{{ path('app_comment_show', {'id': comment.id}) }}">show</a>
-                    <a href="{{ path('app_comment_edit', {'id': comment.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="5">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    <section class="flex flex-col items-center p-4 sm:p-6 min-h-screen w-full gap-6">
 
-    <a href="{{ path('app_comment_new') }}">Create new</a>
+        <h1 class="text-[#6E6F6F] text-2xl sm:text-[2rem] text-center">
+            Modération des commentaires
+        </h1>
+
+        {# ---------- BADGES / ONGLETS ---------- #}
+        <div class="flex flex-wrap justify-center gap-3">
+            <a href="{{ path('app_comment_list', {status: 'pending'}) }}"
+            class="px-4 py-2 rounded-full text-sm font-medium border transition-colors
+                    {{ status == 'pending'
+                        ? 'bg-[#308AFF] text-black border-gray-300 shadow'
+                        : 'bg-[#6E6F6F] text-black border-gray-300 hover:bg-gray-100' }}">
+                En attente
+                <span class="ml-1 text-xs opacity-80">({{ counts.pending }})</span>
+            </a>
+
+            {# <a href="{{ path('app_comment_list', {status: 'reported'}) }}"
+            class="px-4 py-2 rounded-full text-sm font-medium border transition-colors
+                    {{ status == 'reported'
+                        ? 'bg-[#DC3545] text-white border-[#DC3545] shadow'
+                        : 'bg-white text-[#6E6F6F] border-gray-300 hover:bg-gray-100' }}">
+                Signalés
+                <span class="ml-1 text-xs opacity-80">({{ counts.reported }})</span>
+            </a> #}
+
+            <a href="{{ path('app_comment_list', {status: 'approved'}) }}"
+            class="px-4 py-2 rounded-full text-sm font-medium border transition-colors
+                    {{ status == 'approved'
+                        ? 'bg-[#308AFF] text-black border-gray-300 shadow'
+                        : 'bg-[#6E6F6F] text-black border-gray-300 hover:bg-gray-100' }}">
+                Approuvés
+                <span class="ml-1 text-xs opacity-80">({{ counts.approved }})</span>
+            </a>
+        </div>
+
+        {# ---------- LISTE AVEC SCROLL ---------- #}
+        <div class="w-full max-w-4xl flex-1 min-h-0 overflow-y-auto max-h-[70vh] md:max-h-[75vh]">
+            <div class="flex flex-col gap-4">
+
+                {% for comment in comments %}
+                    <div class="bg-[#F0F8FD] shadow-lg rounded-lg p-4 border border-gray-200 hover:shadow-xl transition-shadow break-words">
+
+                        {# Header : avatar + auteur + date #}
+                        <div class="flex items-center gap-2 mb-2">
+                            <div>
+                                {% if comment.user.avatarUrl %}
+                                    <img src="{{ comment.user.avatarUrl }}" alt="Avatar"
+                                        class="w-10 h-10 rounded-full object-cover">
+                                {% else %}
+                                    <div class="w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center font-semibold text-base">
+                                        {{ comment.user.email|first|upper }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="flex flex-wrap items-baseline gap-1 text-sm">
+                                <span class="font-medium text-gray-800">
+                                    {{ comment.user ? comment.user.email : 'Anonyme' }}
+                                </span>
+                                <span>•</span>
+                                <span class="text-gray-400 text-xs">
+                                    {{ comment.createdAt ? comment.createdAt|date('d/m/Y H:i') : '' }}
+                                </span>
+                                {# {% if comment.isReported %}
+                                    <span class="ml-2 px-2 py-0.5 bg-red-100 text-red-700 text-xs rounded-full">
+                                        Signalé
+                                    </span>
+                                {% endif %} #}
+                                {% if comment.isApprouved %}
+                                    <span class="ml-2 px-2 py-0.5 bg-green-100 text-green-700 text-xs rounded-full">
+                                        Approuvé
+                                    </span>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        {# Contenu #}
+                        <p class="text-gray-800 text-base leading-relaxed break-words">
+                            {{ comment.content }}
+                        </p>
+
+                        {# Actions de modération #}
+                        <div class="flex flex-wrap gap-2 mt-4 pt-3 border-t border-gray-200">
+                            {% if not comment.isApprouved %}
+                                <form method="post" action="{{ path('app_comment_approve', {id: comment.id}) }}">
+                                    <input type="hidden" name="_token"
+                                        value="{{ csrf_token('approve' ~ comment.id) }}">
+                                    <button type="submit"
+                                            class="bg-[#28A745] text-white text-sm py-1.5 px-4 rounded-md hover:bg-[#1e7e34] transition-colors">
+                                        ✓ Approuver
+                                    </button>
+                                </form>
+                            {% endif %}
+
+                            <form method="post" action="{{ path('app_comment_reject', {id: comment.id}) }}"
+                                onsubmit="return confirm('Supprimer ce commentaire ?');">
+                                <input type="hidden" name="_token"
+                                    value="{{ csrf_token('reject' ~ comment.id) }}">
+                                <button type="submit"
+                                        class="bg-[#DC3545] text-white text-sm py-1.5 px-4 rounded-md hover:bg-[#a71d2a] transition-colors">
+                                    🗑 Supprimer
+                                </button>
+                            </form>
+
+                            <a href="{{ path('app_comment_show', {id: comment.id}) }}"
+                            data-turbo="false"
+                            class="bg-[#6E6F6F] text-white text-sm py-1.5 px-4 rounded-md hover:bg-[#585959] transition-colors">
+                                Voir le détail
+                            </a>
+                        </div>
+                    </div>
+                {% else %}
+                    <p class="text-center text-gray-500 py-8">
+                        Aucun commentaire dans cette catégorie.
+                    </p>
+                {% endfor %}
+
+            </div>
+        </div>
+
+    </section>
+
 {% endblock %}
