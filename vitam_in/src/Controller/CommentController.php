@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Comment;
 use App\Form\CommentType;
 use App\Repository\CommentRepository;
+use App\Repository\ResponseRepository;
 use App\Repository\SupplementRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -12,6 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+
 
 
 #[Route('/comment')]
@@ -30,7 +32,7 @@ final class CommentController extends AbstractController
         $comment->setSupplement($supplement);
         $comment->setUser($this->getUser());
         $comment->setCreatedAt(new \DateTimeImmutable());
-        $comment->setIsApprouved(true); // por el momento 
+        $comment->setIsApprouved(false); 
         
         $form = $this->createForm(CommentType::class, $comment);
         $form->handleRequest($request);
@@ -62,8 +64,10 @@ final class CommentController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_comment_show', methods: ['GET'], requirements: ['id' => '\d+'])]
-    public function show(Comment $comment): Response
+    public function show(Comment $comment, CommentRepository $commentRepository): Response
     {
+        $comment = $commentRepository->findWithResponses($comment->getId());
+        dd($comment);
         return $this->render('comment/show.html.twig', [
             'comment' => $comment,
         ]);
@@ -89,7 +93,8 @@ final class CommentController extends AbstractController
     }
 
     #[Route('/list', name: 'app_comment_list')]
-    public function list(Request $request, CommentRepository $commentRepository): Response
+    #[IsGranted('ROLE_ADMIN')]
+    public function list(Request $request, CommentRepository $commentRepository, ResponseRepository $responseRepository): Response
     {
          $status = $request->query->get('status', 'pending');
 
@@ -102,23 +107,18 @@ final class CommentController extends AbstractController
                 ['is_approuved' => false],
                 ['created_at' => 'DESC']
             ),
-            // 'reported' => $commentRepository->findBy(
-            //     ['isReported' => true],
-            //     ['createdAt' => 'DESC']
-            // ),
-            // default => $commentRepository->findBy(
-            //     ['isApprouved' => false, 'isReported' => false],
-            //     ['createdAt' => 'DESC']
-            // ),
+            'reported' => $responseRepository->findBy(
+                ['id' => 'DESC'],
+                ['created_at' => 'DESC']
+            ),
+            
         };
-        dump($comments);  
+        // dump($comments);  
 
-        // Para los contadores de cada badge
+        
         $counts = [
-            // 'pending'  => $commentRepository->count(['isApprouved' => false, 'isReported' => false]),
             'pending'  => $commentRepository->count(['is_approuved' => false]),
-
-            // 'reported' => $commentRepository->count(['isReported' => true]),
+            'reported' => $responseRepository->count(['id' => 'DESC']),
             'approved' => $commentRepository->count(['is_approuved' => true]),
         ];
 
@@ -127,8 +127,32 @@ final class CommentController extends AbstractController
             'status'   => $status,
             'counts'   => $counts,
         ]);
-        
-        
-        
+    }
+
+    #[Route('/admin/comment/{id}/approve', name: 'app_comment_approve', methods: ['POST'], requirements: ['id' => '\d+'])]
+    public function approve(Comment $comment, Request $request, EntityManagerInterface $em): Response
+    {
+        if (!$this->isCsrfTokenValid('approve'.$comment->getId(), $request->request->get('_token'))) {
+            throw $this->createAccessDeniedException();
+        }
+        $comment->setIsApprouved(true);
+        $em->flush();
+        $this->addFlash('success', 'Commentaire approuvé.');
+        return $this->redirectToRoute('app_comment_list');
+    }
+
+    //Pour l'instant, un message rejeté sera supprimé, mais nous prévoyons d'ajouter 
+    // ultérieurement un champ `isRejected` à l'entité `comment` afin de le sauvegarder.
+
+    #[Route('/admin/comment/{id}/reject', name: 'app_comment_reject', methods: ['POST'], requirements: ['id' => '\d+'])]
+    public function reject(Comment $comment, Request $request, EntityManagerInterface $em): Response
+    {
+        if (!$this->isCsrfTokenValid('reject'.$comment->getId(), $request->request->get('_token'))) {
+            throw $this->createAccessDeniedException();
+        }
+        $em->remove($comment);
+        $em->flush();
+        $this->addFlash('success', 'Commentaire supprimé.');
+        return $this->redirectToRoute('app_comment_list');
     }
 }

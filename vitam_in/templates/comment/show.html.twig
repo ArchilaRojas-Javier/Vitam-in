@@ -22,7 +22,7 @@
 				<div class="flex flex-wrap items-baseline gap-1 text-sm">
 					<span class="font-medium text-gray-800">
 						{# agregar name cuando la entida user tenga name #}
-						{{ comment.user ? comment.user.email : 'Anónimo' }}
+						{{ comment.user ? comment.user.firstName : 'Anónimo' }}
 					</span>
 					<span>•</span>
 					<span class="text-gray-400 text-xs">{{ comment.createdAt ? comment.createdAt|date('d/m/Y H:i') : '' }}</span>
@@ -91,7 +91,7 @@
 									<span
 										class="font-medium text-gray-800">
 										{# agregar name cuando la entida user tenga name #}
-										{{ response.user ? response.user.email : 'Anónimo' }}
+										{{ response.user ? response.user.firstName : 'Anónimo' }}
 									</span>
 									<span>•</span>
 									<span class="text-gray-400 text-xs">{{ response.createdAt ? response.createdAt|date('d/m/Y H:i') : '' }}</span>

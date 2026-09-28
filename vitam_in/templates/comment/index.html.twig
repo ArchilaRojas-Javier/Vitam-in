@@ -21,14 +21,14 @@
                 <span class="ml-1 text-xs opacity-80">({{ counts.pending }})</span>
             </a>
 
-            {# <a href="{{ path('app_comment_list', {status: 'reported'}) }}"
+            <a href="{{ path('app_comment_list', {status: 'reported'}) }}"
             class="px-4 py-2 rounded-full text-sm font-medium border transition-colors
                     {{ status == 'reported'
-                        ? 'bg-[#DC3545] text-white border-[#DC3545] shadow'
-                        : 'bg-white text-[#6E6F6F] border-gray-300 hover:bg-gray-100' }}">
+                      ? 'bg-[#308AFF] text-black border-gray-300 shadow'
+                        : 'bg-[#6E6F6F] text-black border-gray-300 hover:bg-gray-100' }}">
                 Signalés
                 <span class="ml-1 text-xs opacity-80">({{ counts.reported }})</span>
-            </a> #}
+            </a>
 
             <a href="{{ path('app_comment_list', {status: 'approved'}) }}"
             class="px-4 py-2 rounded-full text-sm font-medium border transition-colors
@@ -92,8 +92,8 @@
                                     <input type="hidden" name="_token"
                                         value="{{ csrf_token('approve' ~ comment.id) }}">
                                     <button type="submit"
-                                            class="bg-[#28A745] text-white text-sm py-1.5 px-4 rounded-md hover:bg-[#1e7e34] transition-colors">
-                                        ✓ Approuver
+                                            class="bg-[#28A745] text-black text-sm py-1.5 px-4 rounded-md hover:bg-[#1e7e34] transition-colors">
+                                            Approuver
                                     </button>
                                 </form>
                             {% endif %}
@@ -103,16 +103,10 @@
                                 <input type="hidden" name="_token"
                                     value="{{ csrf_token('reject' ~ comment.id) }}">
                                 <button type="submit"
-                                        class="bg-[#DC3545] text-white text-sm py-1.5 px-4 rounded-md hover:bg-[#a71d2a] transition-colors">
-                                    🗑 Supprimer
+                                        class="bg-[#DC3545] text-black text-sm py-1.5 px-4 rounded-md hover:bg-[#a71d2a] transition-colors">
+                                        Supprimer
                                 </button>
                             </form>
-
-                            <a href="{{ path('app_comment_show', {id: comment.id}) }}"
-                            data-turbo="false"
-                            class="bg-[#6E6F6F] text-white text-sm py-1.5 px-4 rounded-md hover:bg-[#585959] transition-colors">
-                                Voir le détail
-                            </a>
                         </div>
                     </div>
                 {% else %}
