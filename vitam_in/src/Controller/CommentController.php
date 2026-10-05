@@ -66,8 +66,7 @@ final class CommentController extends AbstractController
     #[Route('/{id}', name: 'app_comment_show', methods: ['GET'], requirements: ['id' => '\d+'])]
     public function show(Comment $comment, CommentRepository $commentRepository): Response
     {
-        $comment = $commentRepository->findWithResponses($comment->getId());
-        dd($comment);
+        
         return $this->render('comment/show.html.twig', [
             'comment' => $comment,
         ]);

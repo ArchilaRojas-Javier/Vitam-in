@@ -21,8 +21,7 @@
                 </div>
 				<div class="flex flex-wrap items-baseline gap-1 text-sm">
 					<span class="font-medium text-gray-800">
-						{# agregar name cuando la entida user tenga name #}
-						{{ comment.user ? comment.user.firstName : 'Anónimo' }}
+						{{ comment.user.email? comment.user.firstName : 'Anónimo' }}
 					</span>
 					<span>•</span>
 					<span class="text-gray-400 text-xs">{{ comment.createdAt ? comment.createdAt|date('d/m/Y H:i') : '' }}</span>
@@ -34,11 +33,7 @@
 							<summary class="list-none cursor-pointer p-1 hover:bg-gray-100 rounded focus:outline-none">
 								{{ ux_icon('lucide:more-horizontal', { 'aria-hidden': 'true', class: 'w-5 h-5' }) }}
 							</summary>
-							<div
-								class="absolute right-0 mt-1 w-36 bg-white border border-gray-200 rounded-md shadow-lg z-10">
-								{# <a href="{{ path('app_comment_edit', { id: comment.id }) }}" class="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100">
-								                        ✏️ Modifier
-								                    </a> #}
+							<div class="absolute right-0 mt-1 w-36 bg-white border border-gray-200 rounded-md shadow-lg z-10">
 								<form method="post" action="{{ path('app_comment_delete', { id: comment.id }) }}" style="display: inline-block; width: 100%;">
 									<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ comment.id) }}">
 									<button type="submit" class="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 text-red-600">
@@ -54,13 +49,15 @@
 			{# Icons #}
             <div class="flex gap-4 mt-2 pl-4">
 
-                {# <a href="{{ path('app_comment_show', { id: comment.id }) }}" 
+                <a href="#" 
 				        data-turbo="false"
 				        class="flex items-center justify-center gap-1">
 				        {{ ux_icon('lucide:message-square-more',{ 'aria-hidden': 'true', class: 'w-5 h-5 cursor-pointer hover:text-gray-700 rounded focus:outline-none' }) }} 
 				        574
-				    </a> #}
-				<a href="#" class="flex items-center justify-center gap-1" data-turbo="flase">
+				    </a>
+				<a href="#" 
+					class="flex items-center justify-center gap-1" 
+					data-turbo="false">
 					{{ ux_icon('lucide:heart',{ 'aria-hidden': 'true', class: 'w-5 h-5 hover:text-red-700 transition-colors' }) }}
 					574
 				</a>
@@ -90,7 +87,6 @@
 								<div class="flex flex-wrap items-baseline gap-1 text-sm">
 									<span
 										class="font-medium text-gray-800">
-										{# agregar name cuando la entida user tenga name #}
 										{{ response.user ? response.user.firstName : 'Anónimo' }}
 									</span>
 									<span>•</span>
@@ -105,9 +101,7 @@
 											</summary>
 											<div
 												class="absolute right-0 mt-1 w-36 bg-white border border-gray-200 rounded-md shadow-lg z-10">
-												{# <a href="{{ path('app_comment_edit', { id: comment.id }) }}" class="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100">
-																																													✏️ Modifier
-																																												</a> #}
+												
 												<form method="post" action="{{ path('app_comment_delete', { id: comment.id }) }}" style="display: inline-block; width: 100%;">
 													<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ comment.id) }}">
 													<button type="submit" class="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 text-red-600">
@@ -122,10 +116,12 @@
 							<p class="text-gray-800 text-base leading-relaxed break-words">{{ response.content }}</p>
 							<div class="flex gap-4 mt-2 pl-4">
 
-								{# <a href="{{ path('app_comment_show', { id: comment.id }) }}" data-turbo="false" class="flex items-center justify-center gap-1">
+								<a href="#" 
+									data-turbo="false" 
+									class="flex items-center justify-center gap-1">
 									{{ ux_icon('lucide:message-square-more',{ 'aria-hidden': 'true', class: 'w-5 h-5 cursor-pointer hover:text-gray-700 rounded focus:outline-none' }) }}
 									574
-								</a> #}
+								</a>
 								<a href="#" class="flex items-center justify-center gap-1" data-turbo="flase">
 									{{ ux_icon('lucide:heart',{ 'aria-hidden': 'true', class: 'w-5 h-5 hover:text-red-700 transition-colors' }) }}
 									574
