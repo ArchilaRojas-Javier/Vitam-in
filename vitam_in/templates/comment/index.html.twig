@@ -92,18 +92,17 @@
                                     <input type="hidden" name="_token"
                                         value="{{ csrf_token('approve' ~ comment.id) }}">
                                     <button type="submit"
-                                            class="bg-[#28A745] text-black text-sm py-1.5 px-4 rounded-md hover:bg-[#1e7e34] transition-colors">
+                                            class="bg-[#308AFF] text-white text-sm p-2 mt-1 border border-[#d3d1d2ea] rounded-md">
                                             Approuver
                                     </button>
                                 </form>
                             {% endif %}
 
-                            <form method="post" action="{{ path('app_comment_reject', {id: comment.id}) }}"
-                                onsubmit="return confirm('Supprimer ce commentaire ?');">
+                            <form method="post" action="{{ path('app_comment_reject', {id: comment.id}) }}">    
                                 <input type="hidden" name="_token"
                                     value="{{ csrf_token('reject' ~ comment.id) }}">
                                 <button type="submit"
-                                        class="bg-[#DC3545] text-black text-sm py-1.5 px-4 rounded-md hover:bg-[#a71d2a] transition-colors">
+                                        class="bg-[#6E6F6F] text-white text-sm p-2 mt-1 border border-[#d3d1d2ea] rounded-md">
                                         Supprimer
                                 </button>
                             </form>

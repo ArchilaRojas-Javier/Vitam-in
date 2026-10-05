@@ -43,11 +43,12 @@ final class CommentController extends AbstractController
             
             $entityManagerInterface->persist($comment);
             $entityManagerInterface->flush();
-            
+            // dd($request->headers);
+            $this->addFlash('success', 'Votre commentaire a été ajouté avec succès et est en attente de validation.');
             return $this->render('supplement/show.html.twig', [
                 'supplement' => $supplement,
             ]);
-        }
+        } 
 
         if ($request->headers->get('turbo-frame') === 'supplement-detail') {
             return $this->render('comment/new_frame.html.twig', [
@@ -95,7 +96,7 @@ final class CommentController extends AbstractController
     #[IsGranted('ROLE_ADMIN')]
     public function list(Request $request, CommentRepository $commentRepository, ResponseRepository $responseRepository): Response
     {
-         $status = $request->query->get('status', 'pending');
+        $status = $request->query->get('status', 'pending');
 
         $comments = match ($status) {
             'approved' => $commentRepository->findBy(
@@ -111,10 +112,8 @@ final class CommentController extends AbstractController
                 ['created_at' => 'DESC']
             ),
             
-        };
-        // dump($comments);  
+        }; 
 
-        
         $counts = [
             'pending'  => $commentRepository->count(['is_approuved' => false]),
             'reported' => $responseRepository->count(['id' => 'DESC']),
